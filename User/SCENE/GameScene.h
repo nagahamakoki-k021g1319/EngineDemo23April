@@ -54,6 +54,9 @@ public: // メンバ関数
 	/// </summary>
 	void Draw();
 
+	void EffUpdate();
+	void EffDraw();
+
 	void CamMove();
 	void CamRota();
 	void CamUpdate();
@@ -97,6 +100,11 @@ private:	//メンバ変数
 	Object3d* skydome = nullptr;
 	Model* skydomeMD = nullptr;
 
+	//パーティクルクラスの初期化 
+	ParticleManager* bloodParticle = nullptr;
+	//当たった時のエフェクト発生
+	int isEffFlag = 0;
+	int EffTimer = 0;
 
 	//UI
 	Sprite* UI = nullptr;

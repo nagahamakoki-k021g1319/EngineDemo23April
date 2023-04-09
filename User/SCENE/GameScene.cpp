@@ -28,6 +28,8 @@ GameScene::~GameScene() {
 	delete gameoverPic;
 	delete floor;
 	delete skydome;
+
+	delete bloodParticle;
 }
 
 /// <summary>
@@ -66,6 +68,8 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input) {
 	skydome = Object3d::Create();
 	skydome->SetModel(skydomeMD);
 	skydome->wtf.scale = (Vector3{ 1000, 1000, 1000 });
+
+	
 
 
 	//プレイヤー
@@ -158,6 +162,11 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input) {
 	spriteCommon->LoadTexture(9, "sousa.png");
 	sousaUi->SetTextureIndex(9);
 	Reset();
+	
+	//パーティクル生成
+	bloodParticle = ParticleManager::Create();
+	bloodParticle->LoadTexture("blod.png");
+	bloodParticle->Update();
 }
 
 void GameScene::Reset() {
@@ -176,6 +185,8 @@ void GameScene::Reset() {
 void GameScene::Update() {
 	switch (scene)
 	{
+	
+
 	case Scene::Title:
 		//シーン切り替え
 		if (input->PButtonTrigger(B)) {
@@ -207,6 +218,20 @@ void GameScene::Update() {
 		CamUpdate();
 		enemyManager_->Update();
 		player_->Update(&camWtf);
+
+		if (input->PushKey(DIK_Q)) {
+			isEffFlag = 1;
+		}
+		if (isEffFlag == 1) {
+			EffTimer++;
+		}
+		if (EffTimer <= 10 && EffTimer >= 1) {
+			EffUpdate();
+		}
+		if (EffTimer >= 11) {
+			isEffFlag = 0;
+			EffTimer = 0;
+		}
 
 		hpGauge->SetPozition({ -400.0f + player_->GetHp() * 4 ,0 });
     
@@ -296,6 +321,7 @@ void GameScene::Draw() {
 		// パーティクル描画前処理
 		ParticleManager::PreDraw(dxCommon->GetCommandList());
 		player_->EffDraw();
+		EffDraw();
 		// パーティクル描画後処理
 		ParticleManager::PostDraw();
 		
@@ -319,6 +345,45 @@ void GameScene::Draw() {
 		gameoverPic->Draw();
 
 		break;
+	}
+}
+
+void GameScene::EffUpdate()
+{
+	//パーティクル範囲
+	for (int i = 0; i < 20; i++) {
+		//X,Y,Z全て[-5.0f,+5.0f]でランダムに分布
+		const float rnd_pos = 0.01f;
+		Vector3 pos{};
+		pos.x += (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
+		pos.y += (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
+		pos.z += (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
+		//速度
+		//X,Y,Z全て[-0.05f,+0.05f]でランダムに分布
+		const float rnd_vel = 0.1f;
+		Vector3 vel{};
+		vel.x = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
+		vel.y = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
+		vel.z = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
+		//重力に見立ててYのみ[-0.001f,0]でランダムに分布
+		const float rnd_acc = 0.00001f;
+		Vector3 acc{};
+		acc.x = (float)rand() / RAND_MAX * rnd_acc - rnd_acc / 2.0f;
+		acc.y = (float)rand() / RAND_MAX * rnd_acc - rnd_acc / 2.0f;
+
+		//追加
+		bloodParticle->Add(60, pos, vel, acc, 1.0f, 0.0f);
+
+		bloodParticle->Update();
+	}
+
+}
+
+void GameScene::EffDraw()
+{
+	if (isEffFlag == 1) {
+		// 3Dオブクジェクトの描画
+		bloodParticle->Draw();
 	}
 }
 

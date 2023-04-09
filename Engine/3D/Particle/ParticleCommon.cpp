@@ -101,6 +101,7 @@ void ParticleCommon::Initialize()
 
 void ParticleCommon::Add(int life, Vector3 position, Vector3 velociy, Vector3 accel, float start_scale, float end_scale)
 {
+
 }
 
 void ParticleCommon::InitializeDescriptorHeap()
