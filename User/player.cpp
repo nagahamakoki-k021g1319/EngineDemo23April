@@ -28,6 +28,7 @@ void Player::Initialize(Input* input) {
 	particleManager->LoadTexture("doge.png");
 	particleManager->Update();
 
+
 	//バディ
 	wolf_ = new Wolf();
 	wolf_->Initialize();
