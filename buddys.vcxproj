@@ -143,8 +143,6 @@
     <ClCompile Include="Engine\2D\SpriteCommon.cpp" />
     <ClCompile Include="Engine\3D\Model.cpp" />
     <ClCompile Include="Engine\3D\Object3d.cpp" />
-    <ClCompile Include="Engine\3D\Particle\Particle.cpp" />
-    <ClCompile Include="Engine\3D\Particle\ParticleCommon.cpp" />
     <ClCompile Include="Engine\3D\Particle\ParticleManager.cpp" />
     <ClCompile Include="Engine\3D\Transform.cpp" />
     <ClCompile Include="Engine\AUDIO\Audio.cpp" />
@@ -181,8 +179,6 @@
     <ClInclude Include="Engine\2D\SpriteCommon.h" />
     <ClInclude Include="Engine\3D\Model.h" />
     <ClInclude Include="Engine\3D\Object3d.h" />
-    <ClInclude Include="Engine\3D\Particle\Particle.h" />
-    <ClInclude Include="Engine\3D\Particle\ParticleCommon.h" />
     <ClInclude Include="Engine\3D\Particle\ParticleManager.h" />
     <ClInclude Include="Engine\3D\Transform.h" />
     <ClInclude Include="Engine\AUDIO\Audio.h" />

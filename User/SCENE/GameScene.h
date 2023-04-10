@@ -101,19 +101,14 @@ private:	//メンバ変数
 	Model* skydomeMD = nullptr;
 
 	//パーティクルクラスの初期化 
-	ParticleManager* bloodParticle = nullptr;
+	std::unique_ptr<ParticleManager> bloodParticle;
 	//当たった時のエフェクト発生
 	int isEffFlag = 0;
 	int EffTimer = 0;
 
 	//UI
-	Sprite* UI = nullptr;
-	Sprite* buttomPng1 = nullptr;
-	Sprite* buttomPng2 = nullptr;
 	Sprite* hpGauge = nullptr;
 	Vector2 hpPosition;
-	Sprite* unionGauge = nullptr;
-	Vector2 unionScale;
 	Sprite* avoidUI = nullptr;
 	Vector3 avoidScale;
 

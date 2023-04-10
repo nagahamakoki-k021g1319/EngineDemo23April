@@ -196,12 +196,6 @@
     <ClCompile Include="User\EnemyManager.cpp">
       <Filter>user\ソース</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\3D\Particle\ParticleCommon.cpp">
-      <Filter>Engine\ソースファイル\3D\Particle</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\3D\Particle\Particle.cpp">
-      <Filter>Engine\ソースファイル\3D\Particle</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\BASE\FPS.h">
@@ -242,9 +236,6 @@
     </ClInclude>
     <ClInclude Include="Engine\AUDIO\Audio.h">
       <Filter>Engine\ヘッダーファイル\AUDIO</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\3D\Model.h">
-      <Filter>Engine\ヘッダーファイル\3D</Filter>
     </ClInclude>
     <ClInclude Include="Engine\3D\Object3d.h">
       <Filter>Engine\ヘッダーファイル\3D</Filter>
@@ -303,11 +294,8 @@
     <ClInclude Include="User\EnemyManager.h">
       <Filter>user\ソース\ヘッダー</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\3D\Particle\ParticleCommon.h">
-      <Filter>Engine\ヘッダーファイル\3D\Particle</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\3D\Particle\Particle.h">
-      <Filter>Engine\ヘッダーファイル\3D\Particle</Filter>
+    <ClInclude Include="Engine\3D\Model.h">
+      <Filter>Engine\ヘッダーファイル\AUDIO</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

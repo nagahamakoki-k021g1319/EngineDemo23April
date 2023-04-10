@@ -16,12 +16,9 @@ GameScene::~GameScene() {
 	delete player_;
 	delete enemyManager_;
 
-	delete UI;
 	delete sousaUi;
-	delete buttomPng1;
-	delete buttomPng2;
+	
 	delete hpGauge;
-	delete unionGauge;
 	delete titlePic;
 	delete selectPic;
 	delete clearPic;
@@ -29,7 +26,6 @@ GameScene::~GameScene() {
 	delete floor;
 	delete skydome;
 
-	delete bloodParticle;
 }
 
 /// <summary>
@@ -81,40 +77,18 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input) {
 	enemyManager_->Initialize();
 	enemyManager_->SetPlayer(player_);
 
-	//UI
-	UI = new Sprite();
-	UI->Initialize(spriteCommon);
-	UI->SetPozition({ 0,0 });
-	UI->SetSize({1280.0f, 720.0f});
-
 	sousaUi = new Sprite();
 	sousaUi->Initialize(spriteCommon);
 	sousaUi->SetPozition({ 0,0 });
 	sousaUi->SetSize({ 1280.0f, 720.0f });
 
-	buttomPng1 = new Sprite();
-	buttomPng1->Initialize(spriteCommon);
-	buttomPng1->SetPozition({ 0,0 });
-	buttomPng1->SetSize({ 1280.0f, 720.0f });
-
-	buttomPng2 = new Sprite();
-	buttomPng2->Initialize(spriteCommon);
-	buttomPng2->SetPozition({ 0,0 });
-	buttomPng2->SetSize({ 1280.0f, 720.0f });
+	
 
 	hpGauge = new Sprite();
 	hpGauge->Initialize(spriteCommon);
 	hpPosition = hpGauge->GetPosition();
 	hpGauge->SetPozition(hpPosition);
 	hpGauge->SetSize({ 1280.0f, 720.0f });
-
-	unionGauge = new Sprite();
-	unionGauge->Initialize(spriteCommon);
-	unionGauge->SetPozition({ 0,0 });
-	unionScale = unionGauge->GetPosition();
-	unionScale.x = 1280.0f;
-	unionScale.y = 720.0f;
-	unionGauge->SetSize(unionScale);
 
 	//ゲームフロー
 	scene = Scene::Select;
@@ -139,18 +113,8 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input) {
 	gameoverPic->Initialize(spriteCommon);
 	gameoverPic->SetPozition({ 0,0 });
 	gameoverPic->SetSize({ 1280,720 });
-
-
-	spriteCommon->LoadTexture(0, "UI.png");
-	UI->SetTextureIndex(0);
-	spriteCommon->LoadTexture(1, "buttom1.png");
-	buttomPng1->SetTextureIndex(1);
-	spriteCommon->LoadTexture(2, "buttom2.png");
-	buttomPng2->SetTextureIndex(2);
 	spriteCommon->LoadTexture(3, "hpGauge.png");
 	hpGauge->SetTextureIndex(3);
-	spriteCommon->LoadTexture(4, "unionGauge.png");
-	unionGauge->SetTextureIndex(4);
 	spriteCommon->LoadTexture(5, "title.png");
 	titlePic->SetTextureIndex(5);
 	spriteCommon->LoadTexture(6, "e.png");
@@ -164,8 +128,9 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input) {
 	Reset();
 	
 	//パーティクル生成
-	bloodParticle = ParticleManager::Create();
-	bloodParticle->LoadTexture("blod.png");
+	bloodParticle = std::make_unique<ParticleManager>();
+	bloodParticle.get()->Initialize();
+	bloodParticle->LoadTexture("doge.png");
 	bloodParticle->Update();
 }
 
@@ -219,7 +184,7 @@ void GameScene::Update() {
 		enemyManager_->Update();
 		player_->Update(&camWtf);
 
-		if (input->PushKey(DIK_Q)) {
+		if (input->TriggerKey(DIK_Q)) {
 			isEffFlag = 1;
 		}
 		if (isEffFlag == 1) {
@@ -318,23 +283,15 @@ void GameScene::Draw() {
 
 		break;
 	case Scene::Play:
-		// パーティクル描画前処理
-		ParticleManager::PreDraw(dxCommon->GetCommandList());
 		player_->EffDraw();
 		EffDraw();
-		// パーティクル描画後処理
-		ParticleManager::PostDraw();
+
 		
-		UI->Draw();
+		
 		sousaUi->Draw();
-		if (input->ButtonInput(LT)) {
-			buttomPng2->Draw();
-		}
-		else {
-			buttomPng1->Draw();
-		}
+		
 		hpGauge->Draw();
-		unionGauge->Draw();
+		
 
 		break;
 	case Scene::Clear:
@@ -351,31 +308,12 @@ void GameScene::Draw() {
 void GameScene::EffUpdate()
 {
 	//パーティクル範囲
-	for (int i = 0; i < 20; i++) {
-		//X,Y,Z全て[-5.0f,+5.0f]でランダムに分布
-		const float rnd_pos = 0.01f;
-		Vector3 pos{};
-		pos.x += (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
-		pos.y += (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
-		pos.z += (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
-		//速度
-		//X,Y,Z全て[-0.05f,+0.05f]でランダムに分布
-		const float rnd_vel = 0.1f;
-		Vector3 vel{};
-		vel.x = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
-		vel.y = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
-		vel.z = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
-		//重力に見立ててYのみ[-0.001f,0]でランダムに分布
-		const float rnd_acc = 0.00001f;
-		Vector3 acc{};
-		acc.x = (float)rand() / RAND_MAX * rnd_acc - rnd_acc / 2.0f;
-		acc.y = (float)rand() / RAND_MAX * rnd_acc - rnd_acc / 2.0f;
-
-		//追加
-		bloodParticle->Add(60, pos, vel, acc, 1.0f, 0.0f);
-
+	
+		Vector3 a = { 10,0,20 };
+		bloodParticle->Setposition(a);
+		bloodParticle->RandParticle();
 		bloodParticle->Update();
-	}
+	
 
 }
 
